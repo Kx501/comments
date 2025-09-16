@@ -6,20 +6,16 @@
 </head>
 <body>
   <h2>评论区</h2>
-  <script src="https://giscus.app/client.js"
-        data-repo="Kx501/mcsmanager-comments"
-        data-repo-id="R_kgDOPxAU-w"
-        data-category="Announcements"
-        data-category-id="DIC_kwDOPxAU-84Cvg0Z"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-CN"
-        crossorigin="anonymous"
-        async>
+  <div id="tcomment"></div>
+
+  <!-- 引入 Twikoo -->
+  <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
+  <script>
+    twikoo.init({
+      envId: 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo', // 这里换成你的 Netlify API 地址
+      el: '#tcomment',
+      lang: 'zh-CN'
+    })
   </script>
 </body>
 </html>
