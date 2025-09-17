@@ -3,58 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="light dark">
-  <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif;
-      margin: 16px;
-    }
-    .bar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .bar button {
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      background: #f7f7f7;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-  </style>
   <title>评论区</title>
 </head>
 <body>
-  <div class="bar">
-    <button id="btnLight">浅色</button>
-    <button id="btnDark">深色</button>
-  </div>
-
+  <button onclick="loadTwikoo('light')">浅色</button>
+  <button onclick="loadTwikoo('dark')">深色</button>
   <div id="tcomment"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
   <script>
-    const ENV_ID = 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo';
-
     function loadTwikoo(theme) {
       localStorage.setItem('twikoo_theme', theme);
-      const container = document.getElementById('tcomment');
-      container.innerHTML = ''; // 清空旧评论区
+
+      let el = document.getElementById('tcomment');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'tcomment';
+        document.body.appendChild(el);
+      } else {
+        el.innerHTML = '';
+      }
+
       twikoo.init({
-        envId: ENV_ID,
+        envId: 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo',
         el: '#tcomment',
         theme
       });
     }
 
-    // 初始化时读取上次选择的主题，没有则默认 light
-    const savedTheme = localStorage.getItem('twikoo_theme') || 'light';
-    loadTwikoo(savedTheme);
-
-    // 按钮事件
-    document.getElementById('btnLight').addEventListener('click', () => loadTwikoo('light'));
-    document.getElementById('btnDark').addEventListener('click', () => loadTwikoo('dark'));
+    // 初始化时加载上次主题
+    loadTwikoo(localStorage.getItem('twikoo_theme') || 'light');
   </script>
 </body>
 </html>
