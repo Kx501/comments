@@ -6,35 +6,26 @@
   <title>评论区</title>
 </head>
 <body>
-  <button onclick="loadTwikoo('light')">浅色</button>
-  <button onclick="loadTwikoo('dark')">深色</button>
+  <button onclick="switchTheme('light')">浅色</button>
+  <button onclick="switchTheme('dark')">深色</button>
 
   <div id="tcomment"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
   <script>
-    function loadTwikoo(theme) {
+    const ENV_ID = 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo';
+
+    function switchTheme(theme) {
       localStorage.setItem('twikoo_theme', theme);
-
-      // 删除旧容器
-      const old = document.getElementById('tcomment');
-      if (old) old.remove();
-
-      // 创建新容器
-      const el = document.createElement('div');
-      el.id = 'tcomment';
-      document.body.appendChild(el);
-
-      // 初始化 Twikoo
-      twikoo.init({
-        envId: 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo',
-        el: '#tcomment',
-        theme
-      });
+      location.reload(); // 直接刷新页面
     }
 
-    // 初始化时加载上次主题
-    loadTwikoo(localStorage.getItem('twikoo_theme') || 'light');
+    const theme = localStorage.getItem('twikoo_theme') || 'light';
+    twikoo.init({
+      envId: ENV_ID,
+      el: '#tcomment',
+      theme
+    });
   </script>
 </body>
 </html>
