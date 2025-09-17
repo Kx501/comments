@@ -3,11 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1e1e1e;
+        color: #ddd;
+      }
+    }
+  </style>
   <title>评论区</title>
 </head>
 <body>
   <div id="tcomment"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
   <script>
     twikoo.init({
