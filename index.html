@@ -8,6 +8,7 @@
 <body>
   <button onclick="loadTwikoo('light')">浅色</button>
   <button onclick="loadTwikoo('dark')">深色</button>
+
   <div id="tcomment"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
@@ -15,15 +16,16 @@
     function loadTwikoo(theme) {
       localStorage.setItem('twikoo_theme', theme);
 
-      let el = document.getElementById('tcomment');
-      if (!el) {
-        el = document.createElement('div');
-        el.id = 'tcomment';
-        document.body.appendChild(el);
-      } else {
-        el.innerHTML = '';
-      }
+      // 删除旧容器
+      const old = document.getElementById('tcomment');
+      if (old) old.remove();
 
+      // 创建新容器
+      const el = document.createElement('div');
+      el.id = 'tcomment';
+      document.body.appendChild(el);
+
+      // 初始化 Twikoo
       twikoo.init({
         envId: 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo',
         el: '#tcomment',
