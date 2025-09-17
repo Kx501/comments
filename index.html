@@ -5,95 +5,72 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>评论区</title>
   <style>
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif;
-      margin: 16px;
-    }
-    .bar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .bar button {
-      padding: 6px 10px;
-      border: 1px solid #ccc;
-      background: #f7f7f7;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .bar .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #999;
-    }
-    .bar .label {
-      color: #666;
-      font-size: 12px;
-    }
+    body { font-family: system-ui, -apple-system, Segoe UI, PingFang SC, Microsoft YaHei, sans-serif; margin: 16px; }
+    .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .bar button { padding: 6px 10px; border: 1px solid #ccc; background: #f7f7f7; cursor: pointer; border-radius: 6px; }
+    .bar .label { color: #666; font-size: 12px; }
   </style>
 </head>
 <body>
   <div class="bar">
     <button id="btnLight">浅色</button>
     <button id="btnDark">深色</button>
-    <span class="dot"></span>
     <span class="label">支持：按钮 / URL 参数 / postMessage 自动切换</span>
   </div>
 
+  <!-- 评论区容器 -->
   <div id="tcomment"></div>
 
-  <!-- 引入 Twikoo -->
+  <!-- Twikoo -->
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
   <script>
-    const ENV_ID = 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo'; // 你的 Netlify API 地址
+    document.addEventListener('DOMContentLoaded', function () {
+      const ENV_ID = 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo';
 
-    // 从 URL 参数获取主题
-    function getThemeFromQuery() {
-      const u = new URL(location.href);
-      const t = (u.searchParams.get('theme') || '').toLowerCase();
-      return (t === 'dark' || t === 'light') ? t : null;
-    }
+      function getThemeFromQuery() {
+        const u = new URL(location.href);
+        const t = (u.searchParams.get('theme') || '').toLowerCase();
+        return (t === 'dark' || t === 'light') ? t : null;
+      }
 
-    // 从本地存储获取主题
-    function getThemeFromStorage() {
-      const t = localStorage.getItem('twikoo_theme');
-      return (t === 'dark' || t === 'light') ? t : null;
-    }
+      function getThemeFromStorage() {
+        const t = localStorage.getItem('twikoo_theme');
+        return (t === 'dark' || t === 'light') ? t : null;
+      }
 
-    // 应用主题
-    function applyTheme(theme) {
-      const el = document.getElementById('tcomment');
-      el.innerHTML = ''; // 清空旧评论区
-      localStorage.setItem('twikoo_theme', theme);
-      twikoo.init({
-        envId: ENV_ID,
-        el: '#tcomment',
-        theme
-      });
-    }
+      function applyTheme(theme) {
+        console.log('切换主题为:', theme);
+        localStorage.setItem('twikoo_theme', theme);
+        const el = document.getElementById('tcomment');
+        if (!el) {
+          console.error('找不到 #tcomment 元素');
+          return;
+        }
+        el.innerHTML = ''; // 清空旧评论区
+        twikoo.init({
+          envId: ENV_ID,
+          el: '#tcomment',
+          theme
+        });
+      }
 
-    // 初始化
-    (function init() {
+      // 初始化
       const theme = getThemeFromQuery() || getThemeFromStorage() || 'light';
       applyTheme(theme);
-    })();
 
-    // 按钮切换
-    document.getElementById('btnLight').onclick = () => applyTheme('light');
-    document.getElementById('btnDark').onclick  = () => applyTheme('dark');
+      // 按钮切换
+      document.getElementById('btnLight').addEventListener('click', () => applyTheme('light'));
+      document.getElementById('btnDark').addEventListener('click', () => applyTheme('dark'));
 
-    // 监听父页面 postMessage（预留自动切换）
-    window.addEventListener('message', (e) => {
-      // 如果需要安全限制，可以加上来源判断：
-      // if (e.origin !== 'https://你的MCSM域名') return;
-      const data = e.data || {};
-      if (data.type === 'theme') {
-        const v = String(data.value || '').toLowerCase();
-        if (v === 'light' || v === 'dark') applyTheme(v);
-      }
-    }, false);
+      // 监听父页面 postMessage
+      window.addEventListener('message', (e) => {
+        const data = e.data || {};
+        if (data.type === 'theme') {
+          const v = String(data.value || '').toLowerCase();
+          if (v === 'light' || v === 'dark') applyTheme(v);
+        }
+      }, false);
+    });
   </script>
 </body>
 </html>
