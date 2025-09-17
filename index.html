@@ -3,29 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1e1e1e;
+        color: #ddd;
+      }
+    }
+  </style>
   <title>评论区</title>
 </head>
 <body>
-  <button onclick="switchTheme('light')">浅色</button>
-  <button onclick="switchTheme('dark')">深色</button>
-
   <div id="tcomment"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js"></script>
   <script>
-    const ENV_ID = 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo';
-
-    function switchTheme(theme) {
-      localStorage.setItem('twikoo_theme', theme);
-      location.reload(); // 刷新页面
-    }
-
-    // 页面加载时读取上次选择的主题
-    const theme = localStorage.getItem('twikoo_theme') || 'light';
     twikoo.init({
-      envId: ENV_ID,
-      el: '#tcomment',
-      theme // 这里会用上次选择的值
+      envId: 'https://twikoo-kx501.netlify.app/.netlify/functions/twikoo',
+      el: '#tcomment'
     });
   </script>
 </body>
