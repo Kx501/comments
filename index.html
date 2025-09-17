@@ -17,14 +17,15 @@
 
     function switchTheme(theme) {
       localStorage.setItem('twikoo_theme', theme);
-      location.reload(); // 直接刷新页面
+      location.reload(); // 刷新页面
     }
 
+    // 页面加载时读取上次选择的主题
     const theme = localStorage.getItem('twikoo_theme') || 'light';
     twikoo.init({
       envId: ENV_ID,
       el: '#tcomment',
-      theme
+      theme // 这里会用上次选择的值
     });
   </script>
 </body>
